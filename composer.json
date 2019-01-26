@@ -2,7 +2,7 @@
     "name": "kryuu-common/crypto-conditions",
     "description": "Base58 Encoding and Decoding Library for PHP",
     "repositories": [ 
-        { "type": "composer", "url": "https://composer.git.ryuu.technology/packages/php/" }
+        { "type": "composer", "url": "https://composer.ryuu.technology/packages/php/" }
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,

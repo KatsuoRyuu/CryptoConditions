@@ -15,6 +15,8 @@ namespace KryuuCommon\CryptoConditions\Types;
  */
 class BaseSha256 {
 
+    public function __construct() {}
+    
     /**
      * Calculate condition hash.
      *

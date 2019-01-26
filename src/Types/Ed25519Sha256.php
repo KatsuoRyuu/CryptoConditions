@@ -10,6 +10,9 @@ namespace KryuuCommon\CryptoConditions\Types;
 
 use KryuuCommon\Buffer\Buffer;
 use Exception;
+use KryuuCommon\CryptoConditions\Exception\KeySizeException;
+use KryuuCommon\CryptoConditions\Exception\TypeException;
+use KryuuCommon\CryptoConditions\Exception\Missing;
 
 /**
  * Description of Ed25519Sha256
@@ -18,6 +21,9 @@ use Exception;
  */
 class Ed25519Sha256 extends BaseSha256 {
 
+    private $signature;
+    private $publicKey;
+    
     public function __construct() {
         parent::__construct();
         $this->publicKey = null;
@@ -32,7 +38,7 @@ class Ed25519Sha256 extends BaseSha256 {
      * @param {Buffer} publicKey Public Ed25519 publicKey
      */
     public function setPublicKey($publicKey) {
-        if (!Buffer . isBuffer($publicKey)) {
+        if (!Buffer::isBuffer($publicKey)) {
             throw new TypeException('Public key must be a Buffer, was: ' + $publicKey);
         }
 
@@ -44,6 +50,10 @@ class Ed25519Sha256 extends BaseSha256 {
 
         $this->publicKey = $publicKey;
     }
+    
+    public function getPublicKey() {
+        return $this->publicKey;
+    }
 
     /**
      * Set the signature.
@@ -54,15 +64,19 @@ class Ed25519Sha256 extends BaseSha256 {
      * @param {Buffer} signature 64-byte signature.
      */
     public function setSignature($signature) {
-        if (!Buffer . isBuffer(signature)) {
+        if (!Buffer::isBuffer($signature)) {
             throw new TypeException('Signature must be a Buffer, was: ' + $signature);
         }
 
-        if (signature . length !== 64) {
+        if (strlen($signature) !== 64) {
             throw new Exception('Signature must be 64 bytes, was: ' + count($signature));
         }
-
+ 
         $this->signature = $signature;
+    }
+    
+    public function getSignature() {
+        return $this->signature;
     }
 
     /**
@@ -75,14 +89,14 @@ class Ed25519Sha256 extends BaseSha256 {
      * @param {String} privateKey Ed25519 private key.
      */
     public function sign($message, $privateKey) {
-        if (!Buffer . isBuffer($message)) {
+        if (!Buffer::isBuffer($message)) {
             throw new MissingDataException('Message must be a Buffer');
         }
-        if (!Buffer . isBuffer($privateKey)) {
+        if (!Buffer::isBuffer($privateKey)) {
             throw new TypeException('Private key must be a Buffer, was: ' + $privateKey);
         }
         if (count($privateKey) !== 32) {
-            throw new ('Private key must be 32 bytes, was: ' + count($privateKey));
+            throw new KeySizeException('Private key must be 32 bytes, was: ' + count($privateKey));
         }
 
         // This would be the Ed25519ph version:
@@ -90,14 +104,14 @@ class Ed25519Sha256 extends BaseSha256 {
         //   .update(message)
         //   .digest()
         // Use native library if available (~65x faster)
-        if ($ed25519) {
-            $keyPair = ed25519 . MakeKeypair($privateKey);
+        if (class_exists('\KryuuCommon\Ed25519')) {
+            $keyPair = \KryuuCommon\Ed25519::MakeKeypair($privateKey);
             $this->setPublicKey($keyPair->publicKey);
-            $this->signature = ed25519 . Sign($message, $keyPair);
+            $this->signature = \KryuuCommon\Ed25519::Sign($message, $keyPair);
         } else {
-            $keyPair = nacl . sign . keyPair . fromSeed($privateKey);
-            $this->setPublicKey((new Buffer)->from($keyPair->publicKey));
-            $this->signature = (new Buffer)->from($nacl->sign->detached($message, $keyPair->secretKey));
+            $publicKey = sodium_crypto_sign_publickey_from_secretkey($privateKey);
+            $this->setPublicKey((new Buffer)->from($publicKey));
+            $this->signature = (new Buffer)->from(sodium_crypto_sign_detached($message, $privateKey));
         }
     }
 
