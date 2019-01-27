@@ -15,6 +15,7 @@ use Exception;
  *
  * @author spawn
  */
-class MissingDataException extends Exception {
+class MissingDataException extends Exception
+{
     //put your code here
 }

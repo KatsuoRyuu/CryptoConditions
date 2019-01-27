@@ -15,6 +15,7 @@ use Exception;
  *
  * @author spawn
  */
-class ValidationException extends Exception {
+class ValidationException extends Exception
+{
     //put your code here
 }

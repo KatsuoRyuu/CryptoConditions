@@ -42,9 +42,5 @@ class SupportTest extends TestCase {
         
     }
     
-    function testBinaryData() {
-        
-        echo unpack($format, $data)
-        
-    }
+    
 }

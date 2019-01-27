@@ -13,10 +13,13 @@ namespace KryuuCommon\CryptoConditions\Types;
  *
  * @author spawn
  */
-class BaseSha256 {
+class BaseSha256
+{
 
-    public function __construct() {}
-    
+    public function __construct()
+    {
+    }
+
     /**
      * Calculate condition hash.
      *
@@ -25,11 +28,11 @@ class BaseSha256 {
      *
      * @return {Buffer} Result from hashing the hash payload.
      */
-    public function generateHash() {
+    public function generateHash()
+    {
         $hash = $crypto->createHash('sha256');
         $hash->update($this->getFingerprintContents());
 
         return $hash->digest();
     }
-
 }

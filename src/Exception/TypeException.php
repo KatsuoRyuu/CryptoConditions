@@ -15,6 +15,7 @@ use Exception;
  *
  * @author spawn
  */
-class TypeException extends Exception {
+class TypeException extends Exception
+{
     //put your code here
 }

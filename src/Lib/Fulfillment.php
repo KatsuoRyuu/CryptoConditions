@@ -15,7 +15,8 @@ use Exception;
 /**
  * Base class for fulfillment types.
  */
-class Fulfillment {
+class Fulfillment
+{
 
     /**
      * Create a Fulfillment object from a URI.
@@ -26,10 +27,11 @@ class Fulfillment {
      * @param {String} serializedFulfillment URI representing the fulfillment
      * @return {Fulfillment} Resulting object
      */
-    static public function fromUri($serializedFulfillment) {
+    public static function fromUri($serializedFulfillment)
+    {
         if ($serializedFulfillment instanceof Fulfillment) {
             return $serializedFulfillment;
-        } else if (!is_string($serializedFulfillment)) {
+        } elseif (! is_string($serializedFulfillment)) {
             throw new TypeException('Serialized fulfillment must be a string');
         }
         $buffer = new Buffer();
@@ -47,12 +49,14 @@ class Fulfillment {
      * @param {Buffer} data Binary buffer
      * @return {Fulfillment} Resulting object
      */
-    static public function fromBinary($data) {
+    public static function fromBinary($data)
+    {
         $fulfillmentJson = Asn1Fulfillment::decode(data);
         return Fulfillment::fromAsn1Json(fulfillmentJson);
     }
 
-    static public function fromAsn1Json($json) {
+    public static function fromAsn1Json($json)
+    {
         $FulfillmentClass = get_class(TypeRegistry . findByAsn1FulfillmentType($json . type));
 
         $condition = new FulfillmentClass();
@@ -61,7 +65,8 @@ class Fulfillment {
         return $condition;
     }
 
-    static public function fromJson($json) {
+    public static function fromJson($json)
+    {
         $ConditionClass = get_class(TypeRegistry . findByName($json . type));
 
         $condition = new ConditionClass();
@@ -75,11 +80,13 @@ class Fulfillment {
      *
      * @return {Number} Type ID as an integer.
      */
-    public function getTypeId() {
+    public function getTypeId()
+    {
         return $this->constructor . TYPE_ID;
     }
 
-    public function getTypeName() {
+    public function getTypeName()
+    {
         return $this->constructor . TYPE_NAME;
     }
 
@@ -93,7 +100,8 @@ class Fulfillment {
      *
      * @return {Set<String>} Set of subtype names.
      */
-    public function getSubtypes() {
+    public function getSubtypes()
+    {
         return new Set();
     }
 
@@ -108,7 +116,8 @@ class Fulfillment {
      *
      * @return {Condition} Condition corresponding to this fulfillment.
      */
-    public function getCondition() {
+    public function getCondition()
+    {
         $condition = new Condition();
         $condition->setHash($this->generateHash())
                 ->setTypeId($this->getTypeId())
@@ -124,7 +133,8 @@ class Fulfillment {
      *
      * @return {String} Condition URI.
      */
-    public function getConditionUri() {
+    public function getConditionUri()
+    {
         return $this->getCondition()->serializeUri();
     }
 
@@ -135,7 +145,8 @@ class Fulfillment {
      *
      * @return {Buffer} Binary encoded condition.
      */
-    public function getConditionBinary() {
+    public function getConditionBinary()
+    {
         return $this->getCondition()->serializeBinary();
     }
 
@@ -148,7 +159,8 @@ class Fulfillment {
      *
      * @private
      */
-    public function generateHash() {
+    public function generateHash()
+    {
         throw new Exception('This method should be implemented by a subclass');
     }
 
@@ -163,11 +175,13 @@ class Fulfillment {
      *
      * @private
      */
-    public function calculateCost() {
+    public function calculateCost()
+    {
         throw new Exception('Condition types must implement calculateCost');
     }
 
-    public function parseAsn1JsonPayload($json) {
+    public function parseAsn1JsonPayload($json)
+    {
         $this->parseJson($json);
     }
 
@@ -180,11 +194,13 @@ class Fulfillment {
      *
      * @return {String} Fulfillment as a URI
      */
-    public function serializeUri() {
+    public function serializeUri()
+    {
         return base64url . encode($this->serializeBinary());
     }
 
-    public function getAsn1Json() {
+    public function getAsn1Json()
+    {
         return [
             "type" => $this . constructor . TYPE_ASN1_FULFILLMENT,
             "value" => $this . getAsn1JsonPayload()
@@ -200,12 +216,14 @@ class Fulfillment {
      *
      * @return {Buffer} Serialized fulfillment
      */
-    public function serializeBinary() {
+    public function serializeBinary()
+    {
         $asn1Json = $this->getAsn1Json();
         return Asn1Fulfillment::encode($asn1Json);
     }
 
-    public function serializeBase64Url() {
+    public function serializeBase64Url()
+    {
         return base64url::encode($this->serializeBinary());
     }
 
@@ -216,8 +234,8 @@ class Fulfillment {
      *
      * @return {Boolean} Validation result
      */
-    public function validate() {
+    public function validate()
+    {
         throw new Exception('Not implemented');
     }
-
 }

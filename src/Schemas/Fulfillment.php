@@ -15,76 +15,80 @@ use ASN1\Type\Tagged\ExplicitlyTaggedType;
 use ASN1\Type\Tagged\ImplicitlyTaggedType;
 use ASN1\Type\Constructed\Set;
 
-
 /**
  * Description of Fulfullment
  *
  * @author spawn
  */
-class Fulfullment {
+class Fulfillment
+{
     //put your code here
-    
+
     /**
-     * 
+     *
      * @return Sequence
-     */    
-    public function preImageFulfillment() {
+     */
+    public function preImageFulfillment()
+    {
         return new Sequence(
             new ImplicitlyTaggedType(0, new OctetString())
         );
     }
-    
+
     /**
-     * 
+     *
      * @return Sequence
      */
-    public function prefixFulfillment() {
+    public function prefixFulfillment()
+    {
         return new Sequence(
             new ImplicitlyTaggedType(0, new OctetString()),
             new ImplicitlyTaggedType(1, new Integer()),
             new ExplicitlyTaggedType(2, $this->preImageFulfillment())
         );
     }
-    
+
     /**
-     * 
+     *
      * @return Sequence
      */
-    public function thresholdFulfillment() {
+    public function thresholdFulfillment()
+    {
         return new Sequence(
             new ImplicitlyTaggedType(0, new Set($this->fulfillment())),
             new ImplicitlyTaggedType(1, new Set(Condition))
-                
         );
     }
-    
+
     /**
-     * 
+     *
      * @return Sequence
      */
-    public function RsaSha256Fulfillment() {
+    public function rsaSha256Fulfillment()
+    {
         return new Sequence(
             new ImplicitlyTaggedType(0, new OctetString),
             new ImplicitlyTaggedType(1, new OctetString)
         );
     }
-    
+
     /**
-     * 
+     *
      * @return Sequence
      */
-    public function Ed25519Sha256Fulfillment() {
+    public function ed25519Sha256Fulfillment()
+    {
         return new Sequence(
             new ImplicitlyTaggedType(0, new OctetString),
             new ImplicitlyTaggedType(1, new OctetString)
         );
     }
-    
-    public function fullfillment() {
-        
+
+    public function fullfillment()
+    {
     }
-    
-    private function choice() {
-        
+
+    private function choice()
+    {
     }
 }

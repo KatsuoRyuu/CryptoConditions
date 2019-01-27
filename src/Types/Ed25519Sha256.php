@@ -19,12 +19,14 @@ use KryuuCommon\CryptoConditions\Exception\Missing;
  *
  * @author spawn
  */
-class Ed25519Sha256 extends BaseSha256 {
+class Ed25519Sha256 extends BaseSha256
+{
 
     private $signature;
     private $publicKey;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
         parent::__construct();
         $this->publicKey = null;
         $this->signature = null;
@@ -37,8 +39,9 @@ class Ed25519Sha256 extends BaseSha256 {
      *
      * @param {Buffer} publicKey Public Ed25519 publicKey
      */
-    public function setPublicKey($publicKey) {
-        if (!Buffer::isBuffer($publicKey)) {
+    public function setPublicKey($publicKey)
+    {
+        if (! Buffer::isBuffer($publicKey)) {
             throw new TypeException('Public key must be a Buffer, was: ' + $publicKey);
         }
 
@@ -50,8 +53,9 @@ class Ed25519Sha256 extends BaseSha256 {
 
         $this->publicKey = $publicKey;
     }
-    
-    public function getPublicKey() {
+
+    public function getPublicKey()
+    {
         return $this->publicKey;
     }
 
@@ -63,19 +67,21 @@ class Ed25519Sha256 extends BaseSha256 {
      *
      * @param {Buffer} signature 64-byte signature.
      */
-    public function setSignature($signature) {
-        if (!Buffer::isBuffer($signature)) {
+    public function setSignature($signature)
+    {
+        if (! Buffer::isBuffer($signature)) {
             throw new TypeException('Signature must be a Buffer, was: ' + $signature);
         }
 
         if (strlen($signature) !== 64) {
             throw new Exception('Signature must be 64 bytes, was: ' + count($signature));
         }
- 
+
         $this->signature = $signature;
     }
-    
-    public function getSignature() {
+
+    public function getSignature()
+    {
         return $this->signature;
     }
 
@@ -88,11 +94,12 @@ class Ed25519Sha256 extends BaseSha256 {
      * @param {Buffer} message Message to sign.
      * @param {String} privateKey Ed25519 private key.
      */
-    public function sign($message, $privateKey) {
-        if (!Buffer::isBuffer($message)) {
+    public function sign($message, $privateKey)
+    {
+        if (! Buffer::isBuffer($message)) {
             throw new MissingDataException('Message must be a Buffer');
         }
-        if (!Buffer::isBuffer($privateKey)) {
+        if (! Buffer::isBuffer($privateKey)) {
             throw new TypeException('Private key must be a Buffer, was: ' + $privateKey);
         }
         if (count($privateKey) !== 32) {
@@ -115,7 +122,8 @@ class Ed25519Sha256 extends BaseSha256 {
         }
     }
 
-    public function parseJson($json) {
+    public function parseJson($json)
+    {
         $this->setPublicKey((new Buffer)->from($json->publicKey, 'base64'));
         $this->setSignature((new Buffer)->from($json->signature, 'base64'));
     }
@@ -129,8 +137,9 @@ class Ed25519Sha256 extends BaseSha256 {
      *
      * @private
      */
-    private function getFingerprintContents() {
-        if (!$this->publicKey) {
+    private function getFingerprintContents()
+    {
+        if (! $this->publicKey) {
             throw new MissingDataException('Requires public key');
         }
 
@@ -139,7 +148,8 @@ class Ed25519Sha256 extends BaseSha256 {
         ]);
     }
 
-    private function getAsn1JsonPayload() {
+    private function getAsn1JsonPayload()
+    {
         return [
             "publicKey" => $this->publicKey,
             "signature" => $this->signature
@@ -154,7 +164,8 @@ class Ed25519Sha256 extends BaseSha256 {
      * @return {Number} Expected maximum cost to fulfill $this condition
      * @private
      */
-    private function calculateCost() {
+    private function calculateCost()
+    {
         return Ed25519Sha256 . CONSTANT_COST;
     }
 
@@ -167,8 +178,9 @@ class Ed25519Sha256 extends BaseSha256 {
      * @param {Buffer} message Message to validate against.
      * @return {Boolean} Whether $this fulfillment is valid.
      */
-    public function validate($message) {
-        if (!Buffer . isBuffer(message)) {
+    public function validate($message)
+    {
+        if (! Buffer . isBuffer(message)) {
             throw new TypeException('Message must be a Buffer');
         }
 
@@ -186,5 +198,4 @@ class Ed25519Sha256 extends BaseSha256 {
 
         return true;
     }
-
 }
