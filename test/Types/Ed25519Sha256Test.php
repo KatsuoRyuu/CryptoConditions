@@ -24,7 +24,7 @@ class Ed25519Sha256Test extends TestCase {
      * @expectedException        TypeException
      * @expectedExceptionMessage Public key must be a Buffer, was: string
      */
-    public function testSetPublicKeyNotBufferException() {
+    public function testSetPublicKeyNotBufferExceptionString() {
 
         (new Ed25519Sha256())->setPublicKey('Wrong key');
     }
@@ -34,7 +34,7 @@ class Ed25519Sha256Test extends TestCase {
      * @expectedException        TypeException
      * @expectedExceptionMessage Public key must be a Buffer, was: integer
      */
-    public function testSetPublicKeyNotBufferException() {
+    public function testSetPublicKeyNotBufferExceptionInteger() {
 
         (new Ed25519Sha256())->setPublicKey(1);
     }
