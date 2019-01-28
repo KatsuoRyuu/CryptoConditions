@@ -70,11 +70,11 @@ class Ed25519Sha256 extends BaseSha256
     public function setSignature($signature)
     {
         if (! Buffer::isBuffer($signature)) {
-            throw new TypeException('Signature must be a Buffer, was: ' + $signature);
+            throw new TypeException('Signature must be a Buffer, was: ' . gettype($signature));
         }
 
         if (strlen($signature) !== 64) {
-            throw new Exception('Signature must be 64 bytes, was: ' + count($signature));
+            throw new Exception('Signature must be 64 bytes, was: ' . count($signature));
         }
 
         $this->signature = $signature;
@@ -100,10 +100,10 @@ class Ed25519Sha256 extends BaseSha256
             throw new MissingDataException('Message must be a Buffer');
         }
         if (! Buffer::isBuffer($privateKey)) {
-            throw new TypeException('Private key must be a Buffer, was: ' + $privateKey);
+            throw new TypeException('Private key must be a Buffer, was: ' . $privateKey);
         }
         if (count($privateKey) !== 32) {
-            throw new KeySizeException('Private key must be 32 bytes, was: ' + count($privateKey));
+            throw new KeySizeException('Private key must be 32 bytes, was: ' . count($privateKey));
         }
 
         // This would be the Ed25519ph version:
@@ -111,7 +111,7 @@ class Ed25519Sha256 extends BaseSha256
         //   .update(message)
         //   .digest()
         // Use native library if available (~65x faster)
-        if (class_exists('\KryuuCommon\Ed25519')) {
+        if (class_exists('\KryuuCommon\Crypto\Ed25519')) {
             $keyPair = \KryuuCommon\Ed25519::MakeKeypair($privateKey);
             $this->setPublicKey($keyPair->publicKey);
             $this->signature = \KryuuCommon\Ed25519::Sign($message, $keyPair);
@@ -186,10 +186,10 @@ class Ed25519Sha256 extends BaseSha256
 
         // Use native library if available (~60x faster)
         $result = null;
-        if (ed25519) {
-            $result = ed25519 . Verify(message, $this->signature, $this->publicKey);
+        if (class_exists('\KryuuCommon\Crypto\Ed25519')) {
+            $result = \KryuuCommon\Crypto\Ed25519::Verify(message, $this->signature, $this->publicKey);
         } else {
-            $result = nacl . sign . detached . verify(message, $this->signature, $this->publicKey);
+            $result = sodium_crypto_sign_verify_detached($this->signature, message, $this->publicKey);
         }
 
         if (result !== true) {
