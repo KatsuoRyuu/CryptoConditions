@@ -7,13 +7,9 @@
  */
 namespace KryuuCommon\CryptoConditionsTest\Types;
 
-
-namespace KryuuCommon\CryptoConditionsTest\Types
-
 use PHPUnit\Framework\TestCase;
 use KryuuCommon\CryptoConditions\Exception\TypeException;
 use KryuuCommon\CryptoConditions\Types\Ed25519Sha256;
-use PHPUnit\Framework\TestCase;
 
 class Ed25519Sha256Test extends TestCase {
     
