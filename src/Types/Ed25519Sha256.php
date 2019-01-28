@@ -42,11 +42,11 @@ class Ed25519Sha256 extends BaseSha256
     public function setPublicKey($publicKey)
     {
         if (! Buffer::isBuffer($publicKey)) {
-            throw new TypeException('Public key must be a Buffer, was: ' + $publicKey);
+            throw new TypeException('Public key must be a Buffer, was: ' . gettype($publicKey));
         }
 
         if (count($publicKey) !== 32) {
-            throw new Exception('Public key must be 32 bytes, was: ' + count($publicKey));
+            throw new Exception('Public key must be 32 bytes, was: ' . count($publicKey));
         }
 
         // TODO Validate public key
