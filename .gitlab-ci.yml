@@ -51,7 +51,7 @@ test:
         paths:
         - ./vendor/
     script:
-    - ./vendor/bin/phpunit --coverage-text --colors=never
     - ./vendor/bin/phpcs
+    - ./vendor/bin/phpunit --coverage-text --colors=never
     - git tag -a "v${VERSION}" -m "CI Auto Tagging"
     - git push origin v${VERSION}
