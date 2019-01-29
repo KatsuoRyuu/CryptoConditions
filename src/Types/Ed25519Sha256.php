@@ -166,7 +166,7 @@ class Ed25519Sha256 extends BaseSha256
      */
     private function calculateCost()
     {
-        return Ed25519Sha256 . CONSTANT_COST;
+        return Ed25519Sha256::CONSTANT_COST;
     }
 
     /**
@@ -180,7 +180,7 @@ class Ed25519Sha256 extends BaseSha256
      */
     public function validate($message)
     {
-        if (! Buffer . isBuffer(message)) {
+        if (! Buffer::isBuffer(message)) {
             throw new TypeException('Message must be a Buffer');
         }
 

@@ -57,20 +57,20 @@ class Fulfillment
 
     public static function fromAsn1Json($json)
     {
-        $FulfillmentClass = get_class(TypeRegistry . findByAsn1FulfillmentType($json . type));
+        $FulfillmentClass = get_class(TypeRegistry . findByAsn1FulfillmentType($json->type));
 
         $condition = new FulfillmentClass();
-        $condition . parseAsn1JsonPayload($json . value);
+        $condition->parseAsn1JsonPayload($json->value);
 
         return $condition;
     }
 
     public static function fromJson($json)
     {
-        $ConditionClass = get_class(TypeRegistry . findByName($json . type));
+        $ConditionClass = get_class(TypeRegistry->findByName($json->type));
 
         $condition = new ConditionClass();
-        $condition . parseJson($json);
+        $condition->parseJson($json);
 
         return $condition;
     }
@@ -82,12 +82,12 @@ class Fulfillment
      */
     public function getTypeId()
     {
-        return $this->constructor . TYPE_ID;
+        return Fulfillment::TYPE_ID;
     }
 
     public function getTypeName()
     {
-        return $this->constructor . TYPE_NAME;
+        return Fulfillment::TYPE_NAME;
     }
 
     /**
@@ -196,14 +196,14 @@ class Fulfillment
      */
     public function serializeUri()
     {
-        return base64url . encode($this->serializeBinary());
+        return Base64Url::encode($this->serializeBinary());
     }
 
     public function getAsn1Json()
     {
         return [
-            "type" => $this . constructor . TYPE_ASN1_FULFILLMENT,
-            "value" => $this . getAsn1JsonPayload()
+            "type" => Fulfillment::TYPE_ASN1_FULFILLMENT,
+            "value" => $this->getAsn1JsonPayload()
         ];
     }
 
@@ -224,7 +224,7 @@ class Fulfillment
 
     public function serializeBase64Url()
     {
-        return base64url::encode($this->serializeBinary());
+        return Base64Url::encode($this->serializeBinary());
     }
 
     /**
