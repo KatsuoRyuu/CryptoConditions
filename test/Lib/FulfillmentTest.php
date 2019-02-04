@@ -21,11 +21,12 @@ class FulfillmentTest extends TestCase {
      * 
      */
     public function testFromUri_SucessfullyParseTheMinimalFulfillment() {
+        
         Fulfillment::fromUri('oAKAAA');
     }
     
     public function testFromUri_SuccesfullyParsesABasicFulfillment() {
-        
+        Fulfillment::fromUri('oCKAIFDYWOCYXsx_YEGKrwzFq1h_QsJXCohAlanozKzQ9lRc');
     }
     
     public function testFromUri_SuccessfullyParsesAFullfillmentWithBase64Padding() {

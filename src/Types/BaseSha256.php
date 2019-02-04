@@ -15,7 +15,9 @@ namespace KryuuCommon\CryptoConditions\Types;
  */
 class BaseSha256
 {
-
+    /**
+     * @removal
+     */
     public function __construct()
     {
     }

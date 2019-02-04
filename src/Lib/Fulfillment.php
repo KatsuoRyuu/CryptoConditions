@@ -11,6 +11,7 @@ namespace KryuuCommon\CryptoConditions\Lib;
 use KryuuCommon\CryptoConditions\Exception\TypeException;
 use KryuuCommon\Buffer\Buffer;
 use Exception;
+use KryuuCommon\CryptoConditions\Schemas\Fulfillment as Asn1Fulfillment;
 
 /**
  * Base class for fulfillment types.
@@ -35,7 +36,8 @@ class Fulfillment
             throw new TypeException('Serialized fulfillment must be a string');
         }
         $buffer = new Buffer();
-        $fulfillment = Fulfillment::fromBinary($buffer->from($serializedFulfillment, 'base64'));
+        $decoded = base64_decode($serializedFulfillment);
+        $fulfillment = Fulfillment::fromBinary($decoded);
 
         return $fulfillment;
     }
@@ -51,7 +53,7 @@ class Fulfillment
      */
     public static function fromBinary($data)
     {
-        $fulfillmentJson = Asn1Fulfillment::decode(data);
+        $fulfillmentJson = Asn1Fulfillment::decode($data);
         return Fulfillment::fromAsn1Json(fulfillmentJson);
     }
 
@@ -67,7 +69,7 @@ class Fulfillment
 
     public static function fromJson($json)
     {
-        $ConditionClass = get_class(TypeRegistry->findByName($json->type));
+        $ConditionClass = get_class(TypeRegistry::findByName($json->type));
 
         $condition = new ConditionClass();
         $condition->parseJson($json);

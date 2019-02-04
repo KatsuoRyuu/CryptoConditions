@@ -22,14 +22,12 @@ use KryuuCommon\CryptoConditions\Exception\Missing;
 class Ed25519Sha256 extends BaseSha256
 {
 
-    private $signature;
-    private $publicKey;
+    private $signature = null;
+    private $publicKey = null;
 
     public function __construct()
     {
         parent::__construct();
-        $this->publicKey = null;
-        $this->signature = null;
     }
 
     /**
@@ -143,7 +141,7 @@ class Ed25519Sha256 extends BaseSha256
             throw new MissingDataException('Requires public key');
         }
 
-        return Asn1Ed25519FingerprintContents . encode([
+        return Asn1Ed25519FingerprintContents::encode([
                     "publicKey" => $this->publicKey
         ]);
     }
