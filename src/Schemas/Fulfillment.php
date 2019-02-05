@@ -18,6 +18,8 @@ use ASN1\Type\UnspecifiedType;
 use ASN1\Type\Structure;
 use ASN1\Element;
 use ASN1\Type\TaggedType;
+use FG\ASN1\TemplateParser;
+use FG\ASN1\Identifier;
 
 /**
  * Description of Fulfullment
@@ -95,14 +97,19 @@ class Fulfillment
 
     public function fullfillment($data)
     {
-        $seq = TaggedType::fromDER($data)->;
-        print_r($seq);
-        $obj = new \stdClass();
-        $obj->preimageSha256Fulfillment = $this->preImageFulfillment($seq->at(0)->toDER());
-        $obj->prefixSha256Fulfillment   = $this->prefixFulfillment($seq->at(1)->toDER());
-        $obj->thresholdSha256Fulfillment= $this->thresholdFulfillment($seq->at(2)->toDER());
-        $obj->rsaSha256Fulfillment      = $this->rsaSha256Fulfillment($seq->at(3)->toDER());
-        $obj->ed25519Sha256Fulfillment  = $this->ed25519Sha256Fulfillment($seq->at(4)->toDER());
+        $template = [
+            Identifier::SEQUENCE => [
+                Identifier::SET => [
+                    Identifier::OBJECT_IDENTIFIER,
+                    Identifier::SEQUENCE => [
+                        Identifier::INTEGER,
+                        Identifier::BITSTRING,
+                    ]
+                ]
+            ]
+        ];
+        $parser = new TemplateParser();
+        $object = $parser->parseBinary($data, $template);
     }
 
     public static function decode($sequence)
