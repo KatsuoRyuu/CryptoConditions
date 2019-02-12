@@ -18,6 +18,8 @@ use ASN1\Type\UnspecifiedType;
 use ASN1\Type\Structure;
 use ASN1\Element;
 use ASN1\Type\TaggedType;
+use FG\ASN1\TemplateParser;
+use FG\ASN1\Identifier;
 
 /**
  * Description of Fulfullment
@@ -103,6 +105,20 @@ class Fulfillment
         $obj->thresholdSha256Fulfillment= $this->thresholdFulfillment($seq->expectTagged(2)->toDER());
         $obj->rsaSha256Fulfillment      = $this->rsaSha256Fulfillment($seq->expectTagged(3)->toDER());
         $obj->ed25519Sha256Fulfillment  = $this->ed25519Sha256Fulfillment($seq->expectTagged(4)->toDER());
+
+//        $template = [
+//            Identifier::SEQUENCE => [
+//                Identifier::SET => [
+//                    Identifier::OBJECT_IDENTIFIER,
+//                    Identifier::SEQUENCE => [
+//                        Identifier::INTEGER,
+//                        Identifier::BITSTRING,
+//                    ]
+//                ]
+//            ]
+//        ];
+//        $parser = new TemplateParser();
+//        $object = $parser->parseBinary($data, $template);
     }
 
     public static function decode($sequence)
