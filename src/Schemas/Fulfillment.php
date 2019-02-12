@@ -34,9 +34,9 @@ class Fulfillment
      */
     public function preImageFulfillment($data)
     {
-        $seq = UnspecifiedType::fromDER($data)->asSequence();
-        $obj = new stdClass();
-        $obj->preimage = $seq->at(0)->asOctetString();
+        $seq = UnspecifiedType::fromDER($data)->asTagged();
+        $obj = new \stdClass();
+        $obj->preimage = $seq->asExplicit(0)->asTagged();
         return $obj;
     }
 
@@ -95,14 +95,14 @@ class Fulfillment
 
     public function fullfillment($data)
     {
-        $seq = TaggedType::fromDER($data)->;
-        print_r($seq);
+        $seq = TaggedType::fromDER($data);
+        //print_r($seq);
         $obj = new \stdClass();
-        $obj->preimageSha256Fulfillment = $this->preImageFulfillment($seq->at(0)->toDER());
-        $obj->prefixSha256Fulfillment   = $this->prefixFulfillment($seq->at(1)->toDER());
-        $obj->thresholdSha256Fulfillment= $this->thresholdFulfillment($seq->at(2)->toDER());
-        $obj->rsaSha256Fulfillment      = $this->rsaSha256Fulfillment($seq->at(3)->toDER());
-        $obj->ed25519Sha256Fulfillment  = $this->ed25519Sha256Fulfillment($seq->at(4)->toDER());
+        $obj->preimageSha256Fulfillment = $this->preImageFulfillment($seq->expectTagged(0)->toDER());
+        $obj->prefixSha256Fulfillment   = $this->prefixFulfillment($seq->expectTagged(1)->toDER());
+        $obj->thresholdSha256Fulfillment= $this->thresholdFulfillment($seq->expectTagged(2)->toDER());
+        $obj->rsaSha256Fulfillment      = $this->rsaSha256Fulfillment($seq->expectTagged(3)->toDER());
+        $obj->ed25519Sha256Fulfillment  = $this->ed25519Sha256Fulfillment($seq->expectTagged(4)->toDER());
     }
 
     public static function decode($sequence)
