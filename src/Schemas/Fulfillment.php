@@ -87,7 +87,7 @@ class Fulfillment
      * @return Sequence
      */
     public function ed25519Sha256Fulfillment($data)
-    { 
+    {
         $seq = UnspecifiedType::fromDER($data)->asObjectIdentifier();
         $obj = new \stdClass();
         $obj->publicKey = $seq->at(0)->asOctetString();
@@ -100,11 +100,11 @@ class Fulfillment
         $seq = TaggedType::fromDER($data);
         //print_r($seq);
         $obj = new \stdClass();
-        $obj->preimageSha256Fulfillment = $this->preImageFulfillment($seq->expectTagged(0)->toDER());
-        $obj->prefixSha256Fulfillment   = $this->prefixFulfillment($seq->expectTagged(1)->toDER());
-        $obj->thresholdSha256Fulfillment= $this->thresholdFulfillment($seq->expectTagged(2)->toDER());
-        $obj->rsaSha256Fulfillment      = $this->rsaSha256Fulfillment($seq->expectTagged(3)->toDER());
-        $obj->ed25519Sha256Fulfillment  = $this->ed25519Sha256Fulfillment($seq->expectTagged(4)->toDER());
+        $obj->preimageSha256Fulfillment  = $this->preImageFulfillment($seq->expectTagged(0)->toDER());
+        $obj->prefixSha256Fulfillment    = $this->prefixFulfillment($seq->expectTagged(1)->toDER());
+        $obj->thresholdSha256Fulfillment = $this->thresholdFulfillment($seq->expectTagged(2)->toDER());
+        $obj->rsaSha256Fulfillment       = $this->rsaSha256Fulfillment($seq->expectTagged(3)->toDER());
+        $obj->ed25519Sha256Fulfillment   = $this->ed25519Sha256Fulfillment($seq->expectTagged(4)->toDER());
 
 //        $template = [
 //            Identifier::SEQUENCE => [
